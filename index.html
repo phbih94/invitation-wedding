@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thiệp Mời Đám Cưới — Con Bò & Con Lợn</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FDFBF7',
+            blush: '#F5E6E8',
+            'blush-deep': '#E8C4C8',
+            gold: '#B8860B',
+            bronze: '#8B6914',
+            brown: '#5C4033',
+            'brown-light': '#7A5C4F',
+          },
+          fontFamily: {
+            display: ['Playfair Display', 'Georgia', 'serif'],
+            body: ['Cormorant Garamond', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #FDFBF7;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .falling-element {
+      position: fixed;
+      top: -40px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: fall linear forwards;
+      opacity: 0.75;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.9; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0.2; }
+    }
+    .timeline-line::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, #E8C4C8, transparent);
+      transform: translateX(-50%);
+    }
+    @media (max-width: 768px) {
+      .timeline-line::before { left: 1.25rem; transform: none; }
+    }
+    .hero-overlay {
+      background: linear-gradient(
+        to bottom,
+        rgba(253, 251, 247, 0.15) 0%,
+        rgba(253, 251, 247, 0.4) 50%,
+        rgba(253, 251, 247, 0.95) 100%
+      );
+    }
+    .countdown-box {
+      background: linear-gradient(135deg, rgba(245, 230, 232, 0.6), rgba(253, 251, 247, 0.9));
+      border: 1px solid rgba(232, 196, 200, 0.5);
+    }
+    input, textarea, select {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .ornament::before, .ornament::after {
+      content: '✦';
+      color: #B8860B;
+      opacity: 0.6;
+      margin: 0 0.75rem;
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body class="text-brown antialiased overflow-x-hidden">
+
+  <!-- Falling petals / hearts -->
+  <div id="falling-container" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-cream/80 backdrop-blur-md border-b border-blush-deep/30">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm md:text-base">
+      <a href="#home" class="text-brown-light hover:text-gold transition-colors tracking-wide">Trang chủ</a>
+      <a href="#countdown" class="text-brown-light hover:text-gold transition-colors tracking-wide">Đếm ngược</a>
+      <a href="#story" class="text-brown-light hover:text-gold transition-colors tracking-wide">Câu chuyện</a>
+      <a href="#event" class="text-brown-light hover:text-gold transition-colors tracking-wide">Sự kiện</a>
+      <a href="#rsvp" class="text-brown-light hover:text-gold transition-colors tracking-wide">RSVP</a>
+      <a href="#gift" class="text-brown-light hover:text-gold transition-colors tracking-wide">Mừng cưới</a>
+      <a href="#guest-list" class="text-brown-light hover:text-gold transition-colors tracking-wide">Danh sách</a>
+    </div>
+  </nav>
+
+  <!-- Header / Hero -->
+  <header id="home" class="relative min-h-screen flex items-end">
+    <div class="absolute inset-0">
+      <img
+        src="https://6a3ca5545605847e40cc6095.imgix.net/chup-anh-cap-doi-2_ede5d753b8de40d3a1426d7afac3ec44_grande.jpeg"
+        alt="Ảnh cặp đôi — thay bằng ảnh của bạn"
+        class="w-full h-full object-cover"
+      />
+      <div class="hero-overlay absolute inset-0"></div>
+    </div>
+    <div class="relative z-10 w-full max-w-4xl mx-auto px-6 pb-20 pt-32 text-center">
+      <p class="font-body text-lg md:text-xl text-brown-light tracking-[0.3em] uppercase mb-4">Trân trọng kính mời</p>
+      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-brown leading-tight mb-2">
+        <span class="italic text-gold">Con Bò</span>
+      </h1>
+      <p class="font-display text-3xl md:text-4xl text-blush-deep my-3">&</p>
+      <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-brown leading-tight mb-8">
+        <span class="italic text-gold">Con Lợn</span>
+      </h1>
+      <div class="inline-block px-8 py-4 bg-cream/70 backdrop-blur-sm rounded-sm border border-blush-deep/40">
+        <p class="font-body text-xl md:text-2xl text-brown tracking-widest">Chủ Nhật · 14 · 09 · 2026</p>
+        <p class="font-body text-lg text-brown-light mt-1">Lễ Vu Quy · 09:00 &nbsp;|&nbsp; Lễ Thành Hôn · 17:30</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Countdown -->
+  <section id="countdown" class="py-20 px-6 bg-blush/30">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="font-display text-3xl md:text-4xl text-brown mb-2 ornament">Đếm Ngược</h2>
+      <p class="font-body text-xl text-brown-light mb-10 italic">Còn bao lâu nữa chúng mình sẽ cùng nói "Có"</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div class="countdown-box rounded-lg p-6 md:p-8">
+          <span id="days" class="font-display text-4xl md:text-6xl text-gold block">00</span>
+          <span class="font-body text-lg text-brown-light tracking-widest uppercase mt-2 block">Ngày</span>
+        </div>
+        <div class="countdown-box rounded-lg p-6 md:p-8">
+          <span id="hours" class="font-display text-4xl md:text-6xl text-gold block">00</span>
+          <span class="font-body text-lg text-brown-light tracking-widest uppercase mt-2 block">Giờ</span>
+        </div>
+        <div class="countdown-box rounded-lg p-6 md:p-8">
+          <span id="minutes" class="font-display text-4xl md:text-6xl text-gold block">00</span>
+          <span class="font-body text-lg text-brown-light tracking-widest uppercase mt-2 block">Phút</span>
+        </div>
+        <div class="countdown-box rounded-lg p-6 md:p-8">
+          <span id="seconds" class="font-display text-4xl md:text-6xl text-gold block">00</span>
+          <span class="font-body text-lg text-brown-light tracking-widest uppercase mt-2 block">Giây</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Story Timeline -->
+  <section id="story" class="py-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-display text-3xl md:text-4xl text-brown text-center mb-2 ornament">Câu Chuyện Tình Yêu</h2>
+      <p class="font-body text-xl text-brown-light text-center mb-16 italic">Hành trình từ người lạ đến người thương</p>
+
+      <div class="relative timeline-line space-y-16 md:space-y-20">
+        <!-- Meet -->
+        <div class="relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+          <div class="md:w-1/2 md:text-right md:pr-12 pl-10 md:pl-0">
+            <span class="font-body text-sm text-gold tracking-widest uppercase">2019</span>
+            <h3 class="font-display text-2xl text-brown mt-1">Quen Nhau</h3>
+            <p class="font-body text-lg text-brown-light mt-2 leading-relaxed">
+              Gặp nhau tại buổi giao lưu của công ty. Một câu chào, một nụ cười — và trái tim bỗng rung lên điều gì đó thật đặc biệt.
+            </p>
+          </div>
+          <div class="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-blush-deep border-2 border-gold"></div>
+          <div class="md:w-1/2"></div>
+        </div>
+
+        <!-- Dating -->
+        <div class="relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+          <div class="md:w-1/2"></div>
+          <div class="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-blush-deep border-2 border-gold"></div>
+          <div class="md:w-1/2 md:pl-12 pl-10">
+            <span class="font-body text-sm text-gold tracking-widest uppercase">2020 — 2024</span>
+            <h3 class="font-display text-2xl text-brown mt-1">Hẹn Hò</h3>
+            <p class="font-body text-lg text-brown-light mt-2 leading-relaxed">
+              Những buổi cà phê muộn, những chuyến đi xa, những lần cãi vã rồi làm lành. Tình yêu lớn lên qua từng ngày bên nhau.
+            </p>
+          </div>
+        </div>
+
+        <!-- Proposal -->
+        <div class="relative flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+          <div class="md:w-1/2 md:text-right md:pr-12 pl-10 md:pl-0">
+            <span class="font-body text-sm text-gold tracking-widest uppercase">Valentine 2025</span>
+            <h3 class="font-display text-2xl text-brown mt-1">Lời Cầu Hôn</h3>
+            <p class="font-body text-lg text-brown-light mt-2 leading-relaxed">
+              Dưới ánh hoàng hôn bên bờ biển Đà Nẵng, anh quỳ xuống và hỏi: "Em có muốn cùng anh viết tiếp câu chuyện này không?" — Em đã gật đầu, với nước mắt hạnh phúc.
+            </p>
+          </div>
+          <div class="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-blush-deep border-2 border-gold"></div>
+          <div class="md:w-1/2"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Event Details -->
+  <section id="event" class="py-20 px-6 bg-blush/20">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="font-display text-3xl md:text-4xl text-brown text-center mb-2 ornament">Thông Tin Sự Kiện</h2>
+      <p class="font-body text-xl text-brown-light text-center mb-12 italic">Hân hạnh được đón tiếp quý khách</p>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Ceremony 1 -->
+        <div class="bg-cream rounded-lg p-8 border border-blush-deep/30 shadow-sm">
+          <h3 class="font-display text-2xl text-gold mb-4">Lễ Vu Quy</h3>
+          <ul class="font-body text-lg text-brown-light space-y-3">
+            <li class="flex gap-3">
+              <span class="text-gold shrink-0">⏰</span>
+              <span>09:00 — Chủ Nhật, 14/09/2026</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-gold shrink-0">📍</span>
+              <span>Nhà gái — 123 Đường Hoa Sen, Quận 3, TP. Hồ Chí Minh</span>
+            </li>
+          </ul>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=123+Duong+Hoa+Sen+Quan+3+Ho+Chi+Minh"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-gold/10 text-gold border border-gold/30 rounded-sm hover:bg-gold/20 transition-colors font-body text-lg tracking-wide"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Mở Google Maps
+          </a>
+        </div>
+
+        <!-- Ceremony 2 -->
+        <div class="bg-cream rounded-lg p-8 border border-blush-deep/30 shadow-sm">
+          <h3 class="font-display text-2xl text-gold mb-4">Lễ Thành Hôn & Tiệc Cưới</h3>
+          <ul class="font-body text-lg text-brown-light space-y-3">
+            <li class="flex gap-3">
+              <span class="text-gold shrink-0">⏰</span>
+              <span>17:30 — Chủ Nhật, 14/09/2026</span>
+            </li>
+            <li class="flex gap-3">
+              <span class="text-gold shrink-0">📍</span>
+              <span>Grand Palace Hotel — 456 Đại Lộ Hạnh Phúc, Quận 7, TP. Hồ Chí Minh</span>
+            </li>
+          </ul>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=Grand+Palace+Hotel+Quan+7+Ho+Chi+Minh"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-gold/10 text-gold border border-gold/30 rounded-sm hover:bg-gold/20 transition-colors font-body text-lg tracking-wide"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Mở Google Maps
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP Form -->
+  <section id="rsvp" class="py-20 px-6">
+    <div class="max-w-xl mx-auto">
+      <h2 class="font-display text-3xl md:text-4xl text-brown text-center mb-2 ornament">Xác Nhận Tham Dự</h2>
+      <p class="font-body text-xl text-brown-light text-center mb-10 italic">Sự hiện diện của quý khách là niềm vinh hạnh lớn lao</p>
+
+      <form id="rsvp-form" class="bg-cream rounded-lg p-8 border border-blush-deep/30 shadow-sm space-y-6">
+        <div>
+          <label for="name" class="block font-body text-lg text-brown mb-2">Họ và tên *</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            placeholder="Nguyễn Văn A"
+            class="w-full px-4 py-3 bg-blush/20 border border-blush-deep/40 rounded-sm text-brown text-lg focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/30"
+          />
+        </div>
+        <div>
+          <label for="phone" class="block font-body text-lg text-brown mb-2">Số điện thoại *</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            required
+            placeholder="0901 234 567"
+            class="w-full px-4 py-3 bg-blush/20 border border-blush-deep/40 rounded-sm text-brown text-lg focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/30"
+          />
+        </div>
+        <div>
+          <label for="guests" class="block font-body text-lg text-brown mb-2">Số người tham dự *</label>
+          <select
+            id="guests"
+            name="guests"
+            required
+            class="w-full px-4 py-3 bg-blush/20 border border-blush-deep/40 rounded-sm text-brown text-lg focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/30"
+          >
+            <option value="1">1 người</option>
+            <option value="2">2 người</option>
+            <option value="3">3 người</option>
+            <option value="4">4 người</option>
+            <option value="5">5 người trở lên</option>
+          </select>
+        </div>
+        <div>
+          <label for="message" class="block font-body text-lg text-brown mb-2">Lời chúc</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="4"
+            placeholder="Gửi lời chúc phúc đến cô dâu chú rể..."
+            class="w-full px-4 py-3 bg-blush/20 border border-blush-deep/40 rounded-sm text-brown text-lg focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/30 resize-none"
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          class="w-full py-4 bg-gold/80 hover:bg-gold text-cream font-display text-xl tracking-widest uppercase transition-colors rounded-sm"
+        >
+          Gửi Xác Nhận
+        </button>
+        <p id="rsvp-success" class="hidden text-center font-body text-lg text-gold"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Gift / QR -->
+  <section id="gift" class="py-20 px-6 bg-blush/20">
+    <div class="max-w-2xl mx-auto text-center">
+      <h2 class="font-display text-3xl md:text-4xl text-brown mb-2 ornament">Hộp Mừng Cưới</h2>
+      <p class="font-body text-xl text-brown-light mb-10 italic leading-relaxed">
+        Sự hiện diện của quý khách đã là món quà ý nghĩa nhất.<br />
+        Nếu muốn gửi lời chúc mừng, vui lòng quét mã QR bên dưới.
+      </p>
+
+      <div class="bg-cream rounded-lg p-8 md:p-10 border border-blush-deep/30 shadow-sm inline-block">
+        <!-- Placeholder QR — thay bằng mã QR ngân hàng thật của bạn -->
+        <div id="qr-code" class="mx-auto mb-6 w-48 h-48 md:w-56 md:h-56 bg-white p-2 rounded-sm border border-blush-deep/30 flex items-center justify-center">
+          <svg viewBox="0 0 100 100" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" fill="white"/>
+            <g fill="#5C4033">
+              <rect x="5" y="5" width="25" height="25" rx="2"/><rect x="10" y="10" width="15" height="15" fill="white"/><rect x="13" y="13" width="9" height="9"/>
+              <rect x="70" y="5" width="25" height="25" rx="2"/><rect x="75" y="10" width="15" height="15" fill="white"/><rect x="78" y="13" width="9" height="9"/>
+              <rect x="5" y="70" width="25" height="25" rx="2"/><rect x="10" y="75" width="15" height="15" fill="white"/><rect x="13" y="78" width="9" height="9"/>
+              <rect x="35" y="5" width="5" height="5"/><rect x="45" y="5" width="5" height="5"/><rect x="55" y="5" width="5" height="5"/>
+              <rect x="40" y="10" width="5" height="5"/><rect x="50" y="15" width="5" height="5"/><rect x="35" y="20" width="5" height="5"/>
+              <rect x="5" y="35" width="5" height="5"/><rect x="15" y="40" width="5" height="5"/><rect x="25" y="35" width="5" height="5"/>
+              <rect x="10" y="50" width="5" height="5"/><rect x="20" y="55" width="5" height="5"/><rect x="5" y="60" width="5" height="5"/>
+              <rect x="35" y="35" width="30" height="30" rx="2" fill="none" stroke="#5C4033" stroke-width="2"/>
+              <text x="50" y="54" text-anchor="middle" font-size="8" fill="#B8860B" font-family="serif">♥</text>
+              <rect x="70" y="35" width="5" height="5"/><rect x="80" y="40" width="5" height="5"/><rect x="90" y="35" width="5" height="5"/>
+              <rect x="75" y="50" width="5" height="5"/><rect x="85" y="55" width="5" height="5"/><rect x="70" y="60" width="5" height="5"/>
+              <rect x="35" y="70" width="5" height="5"/><rect x="45" y="75" width="5" height="5"/><rect x="55" y="80" width="5" height="5"/>
+              <rect x="40" y="85" width="5" height="5"/><rect x="50" y="90" width="5" height="5"/><rect x="60" y="85" width="5" height="5"/>
+              <rect x="70" y="70" width="5" height="5"/><rect x="80" y="75" width="5" height="5"/><rect x="90" y="80" width="5" height="5"/>
+              <rect x="75" y="85" width="5" height="5"/><rect x="85" y="90" width="5" height="5"/>
+            </g>
+          </svg>
+        </div>
+        <div class="font-body text-lg text-brown-light space-y-1">
+          <p><span class="text-brown">Chủ tài khoản:</span> NGUYEN MINH KHANG</p>
+          <p><span class="text-brown">Ngân hàng:</span> Vietcombank</p>
+          <p><span class="text-brown">Số tài khoản:</span> <span class="text-gold font-semibold tracking-wider">0123456789</span></p>
+          <p class="text-sm italic mt-3 text-brown-light/80">Nội dung: MK TH — [Tên của bạn]</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guest List (Admin view) -->
+  <section id="guest-list" class="py-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-display text-3xl md:text-4xl text-brown text-center mb-2 ornament">Danh Sách Khách Mời</h2>
+      <p class="font-body text-lg text-brown-light text-center mb-8 italic">Dữ liệu được lưu trên trình duyệt (LocalStorage)</p>
+
+      <div class="flex flex-wrap justify-center gap-4 mb-8">
+        <button
+          id="refresh-list"
+          class="px-6 py-2 border border-gold/30 text-gold hover:bg-gold/10 transition-colors font-body text-lg rounded-sm"
+        >
+          Làm mới danh sách
+        </button>
+        <button
+          id="export-list"
+          class="px-6 py-2 border border-gold/30 text-gold hover:bg-gold/10 transition-colors font-body text-lg rounded-sm"
+        >
+          Xuất JSON
+        </button>
+        <button
+          id="clear-list"
+          class="px-6 py-2 border border-red-300/50 text-red-700/70 hover:bg-red-50 transition-colors font-body text-lg rounded-sm"
+        >
+          Xóa tất cả
+        </button>
+      </div>
+
+      <div id="guest-list-container" class="space-y-4">
+        <p id="empty-list" class="text-center font-body text-lg text-brown-light italic">Chưa có xác nhận nào.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 px-6 bg-brown text-cream/80 text-center">
+    <p class="font-display text-2xl text-gold mb-2">Minh Khang & Thu Hà</p>
+    <p class="font-body text-lg italic">14 · 09 · 2026</p>
+    <p class="font-body text-sm mt-4 opacity-60">Made with love ♥</p>
+  </footer>
+
+  <script>
+    // ─── Wedding date (change here) ───
+    const WEDDING_DATE = new Date('2026-09-14T09:00:00');
+    const STORAGE_KEY = 'wedding_rsvp_guests';
+
+    // ─── Countdown ───
+    function updateCountdown() {
+      const now = new Date();
+      const diff = WEDDING_DATE - now;
+
+      if (diff <= 0) {
+        ['days', 'hours', 'minutes', 'seconds'].forEach(id => {
+          document.getElementById(id).textContent = '00';
+        });
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // ─── Falling petals & hearts ───
+    const fallingContainer = document.getElementById('falling-container');
+    const petalSVG = `<svg viewBox="0 0 24 24" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C8 6 4 8 4 13c0 3.5 2.5 6 5 7.5C10 22 12 22 12 22s2 0 3-1.5c2.5-1.5 5-4 5-7.5 0-5-4-7-8-11z" fill="currentColor" opacity="0.85"/>
+    </svg>`;
+    const heartSVG = `<svg viewBox="0 0 24 24" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" opacity="0.7"/>
+    </svg>`;
+
+    const colors = ['#E8C4C8', '#F5E6E8', '#D4A5A5', '#B8860B', '#C9A0A0'];
+
+    function createFallingElement() {
+      const el = document.createElement('div');
+      el.className = 'falling-element';
+      const size = Math.random() * 16 + 10;
+      const isHeart = Math.random() > 0.5;
+      el.innerHTML = isHeart ? heartSVG : petalSVG;
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationDuration = (Math.random() * 8 + 6) + 's';
+      el.style.animationDelay = Math.random() * 2 + 's';
+      fallingContainer.appendChild(el);
+
+      el.addEventListener('animationend', () => el.remove());
+    }
+
+    setInterval(createFallingElement, 600);
+    for (let i = 0; i < 12; i++) setTimeout(createFallingElement, i * 200);
+
+    // ─── RSVP LocalStorage ───
+    function getGuests() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveGuests(guests) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(guests));
+    }
+
+    function renderGuestList() {
+      const guests = getGuests();
+      const container = document.getElementById('guest-list-container');
+      const emptyMsg = document.getElementById('empty-list');
+
+      container.querySelectorAll('.guest-card').forEach(el => el.remove());
+
+      if (guests.length === 0) {
+        emptyMsg.classList.remove('hidden');
+        return;
+      }
+
+      emptyMsg.classList.add('hidden');
+
+      guests.slice().reverse().forEach((guest, index) => {
+        const card = document.createElement('div');
+        card.className = 'guest-card bg-cream rounded-lg p-6 border border-blush-deep/30';
+        const realIndex = guests.length - 1 - index;
+        card.innerHTML = `
+          <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
+            <h3 class="font-display text-xl text-brown">${escapeHtml(guest.name)}</h3>
+            <span class="font-body text-sm text-brown-light">${escapeHtml(guest.submittedAt)}</span>
+          </div>
+          <div class="font-body text-lg text-brown-light space-y-1">
+            <p>📞 ${escapeHtml(guest.phone)}</p>
+            <p>👥 ${escapeHtml(guest.guests)} người</p>
+            ${guest.message ? `<p class="italic mt-2">"${escapeHtml(guest.message)}"</p>` : ''}
+          </div>
+          <button data-index="${realIndex}" class="delete-guest mt-4 text-sm text-red-600/60 hover:text-red-700 font-body">Xóa mục này</button>
+        `;
+        container.appendChild(card);
+      });
+
+      container.querySelectorAll('.delete-guest').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.index, 10);
+          const list = getGuests();
+          list.splice(idx, 1);
+          saveGuests(list);
+          renderGuestList();
+        });
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    document.getElementById('rsvp-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const guest = {
+        name: document.getElementById('name').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        guests: document.getElementById('guests').value,
+        message: document.getElementById('message').value.trim(),
+        submittedAt: new Date().toLocaleString('vi-VN'),
+      };
+
+      const list = getGuests();
+      list.push(guest);
+      saveGuests(list);
+
+      const successEl = document.getElementById('rsvp-success');
+      successEl.textContent = 'Cảm ơn bạn! Xác nhận đã được ghi nhận.';
+      successEl.classList.remove('hidden');
+
+      e.target.reset();
+      renderGuestList();
+
+      setTimeout(() => successEl.classList.add('hidden'), 5000);
+    });
+
+    document.getElementById('refresh-list').addEventListener('click', renderGuestList);
+
+    document.getElementById('export-list').addEventListener('click', () => {
+      const data = getGuests();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'danh-sach-khach-moi.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('clear-list').addEventListener('click', () => {
+      if (confirm('Bạn có chắc muốn xóa toàn bộ danh sách khách mời?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        renderGuestList();
+      }
+    });
+
+    renderGuestList();
+  </script>
+</body>
+</html>
