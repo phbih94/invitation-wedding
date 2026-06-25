@@ -590,16 +590,21 @@
 
       // ─── Đọc dữ liệu từ Google đám mây và hiển thị lên Bức tường ───
       let localGuestsCache = []; // Bộ nhớ đệm cục bộ hỗ trợ tính năng xuất JSON và xem danh sách admin
-    
       async function loadWishesAndList() {
         const wallContainer = document.getElementById('wall-container');
         const adminContainer = document.getElementById('guest-list-container');
         const emptyAdminMsg = document.getElementById('empty-list');
 
         try {
-          const response = await fetch(SCRIPT_URL);
+          // Sử dụng giải pháp tối ưu gọi trực tiếp URL với xử lý bất đồng bộ
+          const response = await fetch(SCRIPT_URL, {
+            method: 'GET',
+            redirect: 'follow' // Ép trình duyệt đi theo luồng chuyển hướng của Google để lấy data sạch
+          });
+        
+          if (!response.ok) throw new Error("Mạng không phản hồi");
           const guests = await response.json();
-          localGuestsCache = guests; // Lưu vào bộ nhớ để admin dùng
+          localGuestsCache = guests;
 
           // 1. Cập nhật bức tường lời chúc công khai
           if (wallContainer) {
@@ -629,7 +634,7 @@
             }
           }
 
-          // 2. Cập nhật bảng quản trị Admin (Nếu đang mở)
+          // 2. Cập nhật bảng quản trị Admin
           if (adminContainer) {
             adminContainer.querySelectorAll('.guest-card').forEach(el => el.remove());
             if (guests.length === 0) {
@@ -656,7 +661,10 @@
           }
         } catch (error) {
           console.error("Lỗi đồng bộ:", error);
-          if(wallContainer) wallContainer.innerHTML = `<p class="col-span-full text-center font-body text-sm text-red-400 italic">Bức tường đang bảo trì, lời chúc của bạn vẫn an toàn trên đám mây...</p>`;
+          // Nếu vẫn kẹt Cors trên môi trường local cũ, sử dụng JSONP hoặc thông báo tinh tế hơn
+          if(wallContainer && wallContainer.innerHTML === '') {
+            wallContainer.innerHTML = `<p class="col-span-full text-center font-body text-lg text-brown-light italic opacity-60">Hãy là người đầu tiên gửi lời chúc cho Việt Anh & Lâm Vân...</p>`;
+          }
         }
       }
 
