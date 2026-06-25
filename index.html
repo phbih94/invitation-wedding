@@ -489,244 +489,234 @@
         </div>
       </div>
     </div>
-  </section>
+    </section>
 
-  <!-- Guest List (Admin view) -->
-  <section id="guest-list" class="py-20 px-6">
-    <div class="max-w-3xl mx-auto">
-      <h2 class="font-display text-3xl md:text-4xl text-brown text-center mb-2 ornament">Danh Sách Khách Mời</h2>
-      <p class="font-body text-lg text-brown-light text-center mb-8 italic">Dữ liệu được lưu trên trình duyệt (LocalStorage)</p>
+    <section id="guest-list" class="py-20 px-6 hidden">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="font-display text-3xl md:text-4xl text-brown text-center mb-2 ornament">Danh Sách Khách Mời (Hệ thống)</h2>
+        <p class="font-body text-lg text-brown-light text-center mb-8 italic">Dữ liệu thời gian thực được đồng bộ đám mây</p>
 
-      <div class="flex flex-wrap justify-center gap-4 mb-8">
-        <button
-          id="refresh-list"
-          class="px-6 py-2 border border-gold/30 text-gold hover:bg-gold/10 transition-colors font-body text-lg rounded-sm"
-        >
-          Làm mới danh sách
-        </button>
-        <button
-          id="export-list"
-          class="px-6 py-2 border border-gold/30 text-gold hover:bg-gold/10 transition-colors font-body text-lg rounded-sm"
-        >
-          Xuất JSON
-        </button>
-        <button
-          id="clear-list"
-          class="px-6 py-2 border border-red-300/50 text-red-700/70 hover:bg-red-50 transition-colors font-body text-lg rounded-sm"
-        >
-          Xóa tất cả
-        </button>
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+          <button id="refresh-list" class="px-6 py-2 border border-gold/30 text-gold hover:bg-gold/10 transition-colors font-body text-lg rounded-sm">
+            Làm mới bảng
+          </button>
+          <button id="export-list" class="px-6 py-2 border border-gold/30 text-gold hover:bg-gold/10 transition-colors font-body text-lg rounded-sm">
+            Xuất JSON
+          </button>
+          <button id="clear-list" class="px-6 py-2 border border-red-300/50 text-red-700/70 hover:bg-red-50 transition-colors font-body text-lg rounded-sm">
+            Xóa sạch màn hình
+          </button>
+        </div>
+
+        <div id="guest-list-container" class="space-y-4">
+          <p id="empty-list" class="text-center font-body text-lg text-brown-light italic">Đang tải dữ liệu từ Google Sheets...</p>
+        </div>
       </div>
+    </section>
 
-      <div id="guest-list-container" class="space-y-4">
-        <p id="empty-list" class="text-center font-body text-lg text-brown-light italic">Chưa có xác nhận nào.</p>
-      </div>
-    </div>
-  </section>
+    <footer class="py-12 px-6 bg-brown text-cream/80 text-center">
+      <p class="font-display text-2xl text-gold mb-2">Việt Anh & Lâm Vân</p>
+      <p class="font-body text-lg italic">05 · 07 · 2026</p>
+      <p class="font-body text-sm mt-4 opacity-60">Made with love ♥</p>
+    </footer>
 
-  <!-- Footer -->
-  <footer class="py-12 px-6 bg-brown text-cream/80 text-center">
-    <p class="font-display text-2xl text-gold mb-2">Việt Anh & Lâm Vân</p>
-    <p class="font-body text-lg italic">05 · 07 · 2026</p>
-    <p class="font-body text-sm mt-4 opacity-60">Made with love ♥</p>
-  </footer>
+    <script>
+      // 🔴 ĐƯỜNG LINK GOOGLE WEB APP CỦA BẠN (Dán link nhận được ở Bước 1 vào đây)
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbW_wYLyUYDjdrgPOp5FWxpO_jPRrMGgZsEwCudjLSA55sXZ6CAs3GNuc-DoNWNQ87/exec";
 
-  <script>
-    // ─── Wedding date (change here) ───
-    const WEDDING_DATE = new Date('2026-07-05T08:00:00');
-    const STORAGE_KEY = 'wedding_rsvp_viet_anh_lam_van';
+      const WEDDING_DATE = new Date('2026-07-05T08:00:00');
 
-    // ─── Countdown ───
-    function updateCountdown() {
-      const now = new Date();
-      const diff = WEDDING_DATE - now;
-
-      if (diff <= 0) {
-        ['days', 'hours', 'minutes', 'seconds'].forEach(id => {
-          document.getElementById(id).textContent = '00';
-        });
-        return;
-      }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      document.getElementById('days').textContent = String(days).padStart(2, '0');
-      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-    }
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-
-    // ─── Falling petals & hearts ───
-    const fallingContainer = document.getElementById('falling-container');
-    const petalSVG = `<svg viewBox="0 0 24 24" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2C8 6 4 8 4 13c0 3.5 2.5 6 5 7.5C10 22 12 22 12 22s2 0 3-1.5c2.5-1.5 5-4 5-7.5 0-5-4-7-8-11z" fill="currentColor" opacity="0.85"/>
-    </svg>`;
-    const heartSVG = `<svg viewBox="0 0 24 24" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" opacity="0.7"/>
-    </svg>`;
-
-    const colors = ['#E8C4C8', '#F5E6E8', '#D4A5A5', '#B8860B', '#C9A0A0'];
-
-    function createFallingElement() {
-      const el = document.createElement('div');
-      el.className = 'falling-element';
-      const size = Math.random() * 16 + 10;
-      const isHeart = Math.random() > 0.5;
-      el.innerHTML = isHeart ? heartSVG : petalSVG;
-      el.style.width = size + 'px';
-      el.style.height = size + 'px';
-      el.style.left = Math.random() * 100 + 'vw';
-      el.style.color = colors[Math.floor(Math.random() * colors.length)];
-      el.style.animationDuration = (Math.random() * 8 + 6) + 's';
-      el.style.animationDelay = Math.random() * 2 + 's';
-      fallingContainer.appendChild(el);
-
-      el.addEventListener('animationend', () => el.remove());
-    }
-
-    setInterval(createFallingElement, 600);
-    for (let i = 0; i < 12; i++) setTimeout(createFallingElement, i * 200);
-
-    // ─── RSVP LocalStorage ───
-    function getGuests() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      } catch {
-        return [];
-      }
-    }
-
-    function saveGuests(guests) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(guests));
-    }
-
-    function renderGuestList() {
-      const guests = getGuests();
-      const container = document.getElementById('guest-list-container');
-      const emptyMsg = document.getElementById('empty-list');
-
-      container.querySelectorAll('.guest-card').forEach(el => el.remove());
-
-      if (guests.length === 0) {
-        emptyMsg.classList.remove('hidden');
-        return;
-      }
-
-      emptyMsg.classList.add('hidden');
-
-      guests.slice().reverse().forEach((guest, index) => {
-        const card = document.createElement('div');
-        card.className = 'guest-card bg-cream rounded-lg p-6 border border-blush-deep/30';
-        const realIndex = guests.length - 1 - index;
-        card.innerHTML = `
-          <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
-            <h3 class="font-display text-xl text-brown">${escapeHtml(guest.name)}</h3>
-            <span class="font-body text-sm text-brown-light">${escapeHtml(guest.submittedAt)}</span>
-          </div>
-          <div class="font-body text-lg text-brown-light space-y-1">
-            <p>📞 ${escapeHtml(guest.phone)}</p>
-            <p>👥 ${escapeHtml(guest.guests)} người</p>
-            ${guest.message ? `<p class="italic mt-2">"${escapeHtml(guest.message)}"</p>` : ''}
-          </div>
-          <button data-index="${realIndex}" class="delete-guest mt-4 text-sm text-red-600/60 hover:text-red-700 font-body">Xóa mục này</button>
-        `;
-        container.appendChild(card);
+      // ─── Lệnh bảo mật ẩn/hiển thị khu vực Admin ───
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') === 'true') {
+          document.getElementById('guest-list').classList.remove('hidden');
+        }
       });
 
-      container.querySelectorAll('.delete-guest').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const idx = parseInt(btn.dataset.index, 10);
-          const list = getGuests();
-          list.splice(idx, 1);
-          saveGuests(list);
-          renderGuestList();
-        });
+      // ─── Countdown ───
+      function updateCountdown() {
+        const now = new Date();
+        const diff = WEDDING_DATE - now;
+        if (diff <= 0) {
+          ['days', 'hours', 'minutes', 'seconds'].forEach(id => {
+            document.getElementById(id).textContent = '00';
+          });
+          return;
+        }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        document.getElementById('days').textContent = String(days).padStart(2, '0');
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+      }
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      // ─── Falling petals & hearts ───
+      const fallingContainer = document.getElementById('falling-container');
+      const petalSVG = `<svg viewBox="0 0 24 24" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8 6 4 8 4 13c0 3.5 2.5 6 5 7.5C10 22 12 22 12 22s2 0 3-1.5c2.5-1.5 5-4 5-7.5 0-5-4-7-8-11z" fill="currentColor" opacity="0.85"/></svg>`;
+      const heartSVG = `<svg viewBox="0 0 24 24" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" opacity="0.7"/></svg>`;
+      const colors = ['#E8C4C8', '#F5E6E8', '#D4A5A5', '#B8860B', '#C9A0A0'];
+
+      function createFallingElement() {
+        const el = document.createElement('div');
+        el.className = 'falling-element';
+        const size = Math.random() * 16 + 10;
+        const isHeart = Math.random() > 0.5;
+        el.innerHTML = isHeart ? heartSVG : petalSVG;
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.color = colors[Math.floor(Math.random() * colors.length)];
+        el.style.animationDuration = (Math.random() * 8 + 6) + 's';
+        el.style.animationDelay = Math.random() * 2 + 's';
+        if(fallingContainer) fallingContainer.appendChild(el);
+        el.addEventListener('animationend', () => el.remove());
+      }
+      setInterval(createFallingElement, 600);
+
+      // ─── Khử ký tự lạ mã độc bảo mật ───
+      function escapeHtml(text) {
+        if(!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // ─── Đọc dữ liệu từ Google đám mây và hiển thị lên Bức tường ───
+      let localGuestsCache = []; // Bộ nhớ đệm cục bộ hỗ trợ tính năng xuất JSON và xem danh sách admin
+    
+      async function loadWishesAndList() {
+        const wallContainer = document.getElementById('wall-container');
+        const adminContainer = document.getElementById('guest-list-container');
+        const emptyAdminMsg = document.getElementById('empty-list');
+
+        try {
+          const response = await fetch(SCRIPT_URL);
+          const guests = await response.json();
+          localGuestsCache = guests; // Lưu vào bộ nhớ để admin dùng
+
+          // 1. Cập nhật bức tường lời chúc công khai
+          if (wallContainer) {
+            wallContainer.innerHTML = '';
+            const wishes = guests.filter(g => g.message && g.message.trim() !== '');
+          
+            if (wishes.length === 0) {
+              wallContainer.innerHTML = `<p class="col-span-full text-center font-body text-lg text-brown-light italic opacity-60">Hãy là người đầu tiên để lại lời chúc phúc...</p>`;
+            } else {
+              wishes.slice().reverse().forEach(guest => {
+                const card = document.createElement('div');
+                card.className = 'bg-blush/30 rounded-xl p-5 border border-blush-deep/20 shadow-sm transition-all hover:scale-[1.02] duration-300';
+                let dateStr = "";
+                if(guest.submittedAt) {
+                  const d = new Date(guest.submittedAt);
+                  if(!isNaN(d.getTime())) dateStr = `${d.getDate()}/${d.getMonth()+1}`;
+                }
+                card.innerHTML = `
+                  <p class="font-body text-lg text-brown italic mb-3">"${escapeHtml(guest.message)}"</p>
+                  <div class="flex justify-between items-center border-t border-blush-deep/10 pt-2">
+                    <span class="font-display text-base text-gold font-medium">✨ ${escapeHtml(guest.name)}</span>
+                    <span class="font-body text-xs text-brown-light/60">${dateStr}</span>
+                  </div>
+                `;
+                wallContainer.appendChild(card);
+              });
+            }
+          }
+
+          // 2. Cập nhật bảng quản trị Admin (Nếu đang mở)
+          if (adminContainer) {
+            adminContainer.querySelectorAll('.guest-card').forEach(el => el.remove());
+            if (guests.length === 0) {
+              if(emptyAdminMsg) emptyAdminMsg.classList.remove('hidden');
+            } else {
+              if(emptyAdminMsg) emptyAdminMsg.classList.add('hidden');
+              guests.slice().reverse().forEach((guest) => {
+                const card = document.createElement('div');
+                card.className = 'guest-card bg-cream rounded-lg p-6 border border-blush-deep/30';
+                card.innerHTML = `
+                  <div class="flex flex-wrap justify-between items-start gap-2 mb-3">
+                    <h3 class="font-display text-xl text-brown">${escapeHtml(guest.name)}</h3>
+                    <span class="font-body text-sm text-brown-light">${escapeHtml(guest.submittedAt)}</span>
+                  </div>
+                  <div class="font-body text-lg text-brown-light space-y-1">
+                    <p>📞 ${escapeHtml(guest.phone || 'Không để lại')}</p>
+                    <p>👥 ${escapeHtml(guest.guests || '1')} người</p>
+                    ${guest.message ? `<p class="italic mt-2">"${escapeHtml(guest.message)}"</p>` : ''}
+                  </div>
+                `;
+                adminContainer.appendChild(card);
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Lỗi đồng bộ:", error);
+          if(wallContainer) wallContainer.innerHTML = `<p class="col-span-full text-center font-body text-sm text-red-400 italic">Bức tường đang bảo trì, lời chúc của bạn vẫn an toàn trên đám mây...</p>`;
+        }
+      }
+
+      // ─── Lắng nghe sự kiện gửi Form RSVP ───
+      document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const successEl = document.getElementById('rsvp-success');
+        if(successEl) {
+          successEl.textContent = 'Đang gửi thông tin của bạn lên đám mây...';
+          successEl.classList.remove('hidden');
+        }
+
+        const guestData = {
+          name: document.getElementById('name').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          guests: document.getElementById('guests').value,
+          message: document.getElementById('message').value.trim()
+        };
+
+        try {
+          // Bắn trực tiếp dữ liệu lên Google Sheets đám mây
+          await fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(guestData)
+          });
+
+          if(successEl) successEl.textContent = 'Cảm ơn bạn! Thông tin đã được ghi nhận trực tuyến.';
+          e.target.reset();
+        
+          // Tải lại dữ liệu sau 1.5 giây để cập nhật bức tường lời chúc liền lập tức
+          setTimeout(loadWishesAndList, 1500);
+        } catch (error) {
+          if(successEl) successEl.textContent = 'Kết nối gián đoạn, vui lòng gửi lại nhé!';
+        }
+
+        if(successEl) setTimeout(() => successEl.classList.add('hidden'), 5000);
       });
-    }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
+      // ─── Các sự kiện phụ trợ cho Admin ───
+      document.getElementById('refresh-list').addEventListener('click', loadWishesAndList);
 
-    document.getElementById('rsvp-form').addEventListener('submit', (e) => {
-      e.preventDefault();
+      document.getElementById('export-list').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(localGuestsCache, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'danh-sach-dam-cuoi-google.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
 
-      const guest = {
-        name: document.getElementById('name').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        guests: document.getElementById('guests').value,
-        message: document.getElementById('message').value.trim(),
-        submittedAt: new Date().toLocaleString('vi-VN'),
-      };
+      document.getElementById('clear-list').addEventListener('click', () => {
+        alert('Dữ liệu của bạn được bảo mật tuyệt đối trên Google Sheets. Để xóa dữ liệu, vui lòng vào trực tiếp file Excel của bạn nhé!');
+      });
 
-      const list = getGuests();
-      list.push(guest);
-      saveGuests(list);
-
-      const successEl = document.getElementById('rsvp-success');
-      successEl.textContent = 'Cảm ơn bạn! Xác nhận đã được ghi nhận.';
-      successEl.classList.remove('hidden');
-
-      e.target.reset();
-      renderGuestList();
-
-      setTimeout(() => successEl.classList.add('hidden'), 5000);
-    });
-    // ─── ĐOẠN MỚI THÊM: Đẩy lời chúc lên Bức Tường Lời Chúc ───
-    // (Đoạn này được tự động kích hoạt bên trong hàm renderGuestList)
-    const wallContainer = document.getElementById('wall-container');
-    if (wallContainer) {
-      wallContainer.innerHTML = ''; 
-      const listForWall = getGuests();
-      const wishes = listForWall.filter(g => g.message && g.message.trim() !== '');
-      
-      if (wishes.length === 0) {
-        wallContainer.innerHTML = `<p class="col-span-full text-center font-body text-lg text-brown-light italic opacity-60">Hãy là người đầu tiên để lại lời chúc phúc...</p>`;
-      } else {
-        wishes.forEach(guest => {
-          const card = document.createElement('div');
-          card.className = 'bg-blush/30 rounded-xl p-5 border border-blush-deep/20 shadow-sm transition-all hover:scale-[1.02] duration-300';
-          card.innerHTML = `
-            <p class="font-body text-lg text-brown italic mb-3">"${escapeHtml(guest.message)}"</p>
-            <div class="flex justify-between items-center border-t border-blush-deep/10 pt-2">
-              <span class="font-display text-base text-gold font-medium">✨ ${escapeHtml(guest.name)}</span>
-              <span class="font-body text-xs text-brown-light/60">${escapeHtml(guest.submittedAt.split(' ')[0])}</span>
-            </div>
-          `;
-          wallContainer.innerHTML += card.outerHTML;
-        });
-      }
-    }
-    // ────────────────────────────────────────────────────────
-    document.getElementById('refresh-list').addEventListener('click', renderGuestList);
-
-    document.getElementById('export-list').addEventListener('click', () => {
-      const data = getGuests();
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'danh-sach-khach-moi.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    document.getElementById('clear-list').addEventListener('click', () => {
-      if (confirm('Bạn có chắc muốn xóa toàn bộ danh sách khách mời?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        renderGuestList();
-      }
-    });
-
-    renderGuestList();
-  </script>
-</body>
-</html>
+      // Tự động kích hoạt khi mở trang
+      loadWishesAndList();
+    </script>
+  </body>
+  </html>
